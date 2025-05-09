@@ -1,11 +1,15 @@
 const express = require('express');
-const connectDB = require('./config/db');
-const routes = require('./routes');
+const mongoose = require('mongoose');
+const reviewRoutes = require('./routes/reviewRoutes');
 
 const app = express();
-connectDB();
 app.use(express.json());
-app.use('/api', routes);
 
-const PORT = process.env.PORT || 5000;
-app.listen(PORT, () => console.log(`Service running on port ${PORT}`));
+mongoose.connect('mongodb://localhost:27017/reviewservice')
+  .then(() => console.log('✅ MongoDB connected to Review Service'))
+  .catch(err => console.error('❌ MongoDB error:', err));
+
+app.use('/api/reviews', reviewRoutes);
+
+const PORT = 5003;
+app.listen(PORT, () => console.log(`📝 Review Service running on port ${PORT}`));
